@@ -39,10 +39,11 @@ void lC(int i,int tPin){
 }
 
 // the setup function runs once when you press reset or power the board
-void setup() {
-  
   int s=1;
   int c=1; 
+
+void setup() {
+  
 
   for(int i=low_led_pin;i<max_led_pin;i++)
   {
