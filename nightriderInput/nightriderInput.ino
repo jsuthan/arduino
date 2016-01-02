@@ -46,6 +46,13 @@ void lC(int i,int tPin){
   }
 }
 
+
+void b8led(){
+  lUp(8);
+  delay(100);
+  lDown(8);
+}
+
 // the setup function runs once when you press reset or power the board
 int c=1; 
 
@@ -56,26 +63,30 @@ void setup() {
   }
 
   Timer1.initialize(IntPeriod);
-  Timer1.attachInterrupt(serialEvent);
+  Timer1.attachInterrupt(b8led);
   Serial.begin(9600);
 }
 
 
+boolean debounce(int last){
+    boolean current = inInt;
+    if(last != current){
+     delay(100);
+     current = inInt; 
+    }
+    return current;
+}
+
 
 // the loop function runs over and over again forever
 void loop() {
- 
- // save loop cycle when there is no activity. 
-  if( os == inInt ){
-    Serial.println("no changes.");
-    delay(1000);
+
+  if ( os == inInt ){
     return;
   }else{
-    Serial.println("change circuit.");
     os=inInt;
   }
-  
-    
+
   d++; 
   c++;
   for(int i=mid_led_pin;i<max_led_pin;i++){
@@ -100,20 +111,22 @@ void loop() {
   if(d>1500){
     d=50;
   }
-  
-    s=inInt;
+
+  s=inInt;
 
 }
 
 void serialEvent(){
   while(Serial.available()){
-      char inChar = (char)Serial.read();
-      if(inChar == '\n') return;
+    int inChar = (int)Serial.read();
     if(inChar==48) {
+        Serial.println("set 1");
       inInt=1;
-    }else if(inChar==49){
-    inInt=0;
     }
+    else if(inChar==49){
+        Serial.println("set 0");
+      inInt=0;   }
   }
 }
+
 
